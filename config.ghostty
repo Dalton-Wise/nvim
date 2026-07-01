@@ -1,0 +1,47 @@
+theme = Catppuccin Mocha
+font-family = CaskaydiaCove Nerd Font
+font-size = 12 
+
+background-opacity = 0.85
+macos-titlebar-style = tabs
+gtk-titlebar = false
+alpha-blending = native
+cursor-style = bar
+background-blur = true
+maximize = false
+term = xterm
+copy-on-select = clipboard
+shell-integration = zsh
+
+# keybinds
+
+keybind = opt+r=reload_config
+keybind = opt+x=close_surface
+
+# tabs
+keybind = opt+shift+l=next_tab
+keybind = opt+shift+h=previous_tab
+
+# split
+keybind = opt+\=new_split:right
+keybind = opt+-=new_split:down
+
+keybind = opt+j=goto_split:bottom
+keybind = opt+k=goto_split:top
+keybind = opt+h=goto_split:left
+keybind = opt+l=goto_split:right
+
+keybind = opt+e=equalize_splits
+
+keybind = opt+shift+left=resize_split:left,100
+keybind = opt+shift+right=resize_split:right,100
+keybind = opt+shift+up=resize_split:up,100
+keybind = opt+shift+down=resize_split:down,100
+
+keybind = opt+shift+super+left=resize_split:left,10
+keybind = opt+shift+super+right=resize_split:right,10
+keybind = opt+shift+super+up=resize_split:up,10
+keybind = opt+shift+super+down=resize_split:down,10
+
+# quick term
+keybind = global:opt+backquote=toggle_quick_terminal
