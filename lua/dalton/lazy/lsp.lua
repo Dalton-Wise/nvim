@@ -1,107 +1,32 @@
 return {
     "neovim/nvim-lspconfig",
+    version = "^2.0.0",
+    lazy = false,
     dependencies = {
-        "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-        "hrsh7th/cmp-cmdline",
-        "hrsh7th/nvim-cmp",
+        { "mason-org/mason.nvim", version = "^2.0.0", opts = {} },
+        { "mason-org/mason-lspconfig.nvim", version = "^2.0.0" },
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
+        "saghen/blink.cmp",
+        { "j-hui/fidget.nvim", opts = {} },
     },
-
     config = function()
-        local cmp = require('cmp')
-        local cmp_lsp = require("cmp_nvim_lsp")
-        local capabilities = vim.tbl_deep_extend(
-            "force",
-            {},
-            vim.lsp.protocol.make_client_capabilities(),
-            cmp_lsp.default_capabilities())
+        require("dalton.lsp").setup()
 
-        require("mason").setup()
+        local servers = { "lua_ls", "pylsp", "gopls" }
+        local capabilities = require("blink.cmp").get_lsp_capabilities()
+        for _, name in ipairs(servers) do
+            vim.lsp.config(name, { capabilities = capabilities })
+        end
+        vim.lsp.config("lua_ls", {
+            settings = { Lua = { completion = { callSnippet = "Replace" } } },
+        })
+
+        -- IntelliJ owns Java/Kotlin. An old Mason JDTLS installation must stay inactive.
+        vim.lsp.enable("jdtls", false)
+        require("mason-tool-installer").setup({ ensure_installed = { "stylua" } })
         require("mason-lspconfig").setup({
-            ensure_installed = {
-                "lua_ls",
-            },
-            handlers = {
-                function(server_name) -- default handler (optional)
-                    require("lspconfig")[server_name].setup {
-                        capabilities = capabilities
-                    }
-                end,
-
-                ["lua_ls"] = function()
-                    local lspconfig = require("lspconfig")
-                    lspconfig.lua_ls.setup {
-                        capabilities = capabilities,
-                        settings = {
-                            Lua = {
-                                runtime = { version = "Lua 5.1" },
-                                diagnostics = {
-                                    globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
-                                }
-                            }
-                        }
-                    }
-                end,
-
-                ["clangd"] = function ()
-                    local lspconfig = require("lspconfig")
-                    lspconfig.clangd.setup {
-                        cmd = { "clangd",
-                                "--all-scopes-completion",
-                                "--background-index",
-                                "--clang-tidy",
-                                "--compile_args_from=filesystem",
-                                "--completion-parse=always",
-                                "--completion-style=bundled",
-                                "--cross-file-rename",
-                                "--debug-origin",
-                                "--enable-config",
-                                "--fallback-style=Qt",
-                                "--folding-ranges",
-                                "--function-arg-placeholders",
-                                "--header-insertion=iwyu",
-                                "--pch-storage=memory",
-                                "--suggest-missing-includes",
-                                "-j=4",
-                                "--log=error",
-                            },
-                        filetypes = { "c", "cpp", "objc", "objcpp" },
-                        single_file_support = true,
-                        capabilities = capabilities,
-                    }
-                end
-            }
+            ensure_installed = servers,
+            automatic_enable = servers,
         })
-
-        local cmp_select = { behavior = cmp.SelectBehavior.Select }
-
-        cmp.setup({
-            mapping = cmp.mapping.preset.insert({
-                ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-                ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-                ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-                ["<C-Space>"] = cmp.mapping.complete(),
-            }),
-            sources = cmp.config.sources({
-                { name = 'nvim_lsp' },
-            }, {
-                { name = 'buffer' },
-            })
-        })
-
-        vim.diagnostic.config({
-            -- update_in_insert = true,
-            float = {
-                focusable = true,
-                style = "minimal",
-                border = "rounded",
-                source = "always",
-                header = "",
-                prefix = "",
-            },
-        })
-    end
+    end,
 }

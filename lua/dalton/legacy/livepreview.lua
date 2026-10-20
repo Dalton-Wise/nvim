@@ -1,3 +1,4 @@
+-- Superseded by markdown-preview.nvim; not imported by lazy.nvim.
 return {
     'brianhuster/live-preview.nvim',
     dependencies = {

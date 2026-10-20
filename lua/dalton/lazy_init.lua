@@ -1,6 +1,6 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
+if not vim.uv.fs_stat(lazypath) then
+    local output = vim.fn.system({
         "git",
         "clone",
         "--filter=blob:none",
@@ -8,10 +8,12 @@ if not vim.loop.fs_stat(lazypath) then
         "--branch=stable",
         lazypath,
     })
+    if vim.v.shell_error ~= 0 then
+        error("Could not install lazy.nvim:\n" .. output)
+    end
 end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     spec = "dalton.lazy",
 })
-

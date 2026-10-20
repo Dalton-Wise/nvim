@@ -1,0 +1,38 @@
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
+
+// Applied only to Gradle imports launched by this Neovim configuration.
+allprojects { project ->
+    project.plugins.withId('java') {
+        project.plugins.withId('eclipse') {
+            def eclipse = project.extensions.getByName('eclipse')
+            def outputDir = project.file('build/jdtls')
+            def bin = project.file('bin').toPath()
+            if (java.nio.file.Files.exists(bin, java.nio.file.LinkOption.NOFOLLOW_LINKS)) {
+                throw new GradleException("Neovim JDTLS: ${project.path}/bin already exists. "
+                    + 'Move existing Eclipse output out of bin before reimporting; existing files will not be replaced.')
+            }
+            def existingLink = eclipse.project.linkedResources.find { it.name == 'bin' }
+            if (existingLink && existingLink.location != outputDir.absolutePath) {
+                throw new GradleException("Neovim JDTLS: ${project.path} already defines a different Eclipse bin link.")
+            }
+
+            eclipse.classpath.defaultOutputDir = new File(outputDir, 'default')
+            if (eclipse.classpath.hasProperty('baseSourceOutputDir')) {
+                eclipse.classpath.baseSourceOutputDir.set(outputDir)
+            }
+            eclipse.classpath.file.whenMerged { classpath ->
+                classpath.entries.findAll { it instanceof SourceFolder && it.output }.each { entry ->
+                    if (entry.output == 'bin' || entry.output.startsWith('bin/')) {
+                        entry.output = 'build/jdtls' + entry.output.substring(3)
+                    }
+                }
+            }
+
+            // JDTLS hardcodes annotation-processor paths under "bin". This is an
+            // Eclipse-only resource link, not a filesystem folder or symlink.
+            if (!existingLink) {
+                eclipse.project.linkedResource(name: 'bin', type: '2', location: outputDir.absolutePath)
+            }
+        }
+    }
+}
