@@ -1,13 +1,12 @@
 return {
     "JetBrains/intellij-lsp.nvim",
-    commit = "9cfad18005470e4187090013e08f92ec9e437219",
     lazy = false,
     opts = function()
-        -- INTELLIJ_LSP_SERVER can point at a newer bundle when an EAP build expires.
-        -- Use the verified local bundle, avoiding the upstream 0.11 downloader issue.
+        -- Unset, the plugin downloads and verifies the server bundle its release pins.
+        -- INTELLIJ_LSP_SERVER points at a custom bin/intellij-server instead.
         local server = vim.env.INTELLIJ_LSP_SERVER
-        if not server or server == "" then
-            server = vim.fn.stdpath("data") .. "/intellij-lsp/server/263.6379.0/bin/intellij-server"
+        if server == "" then
+            server = nil
         end
         local sdk = vim.env.JAVA_HOME
         if not sdk or sdk == "" then

@@ -51,10 +51,7 @@ vim.system = function(command)
 end
 assert(intellij.opts().default_sdk == "/detected/jdk")
 vim.env.INTELLIJ_LSP_SERVER = ""
-assert(
-    intellij.opts().server_path:match("/263%.6379%.0/bin/intellij%-server$"),
-    "An empty override must use the installed bundle"
-)
+assert(intellij.opts().server_path == nil, "An empty override must let the plugin download its pinned bundle")
 vim.system = function()
     return { wait = function() return { code = 1 } end }
 end

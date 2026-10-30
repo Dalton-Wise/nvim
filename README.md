@@ -55,19 +55,18 @@ and `<Tab>/<S-Tab>` moves between snippet placeholders.
 ## Java and Kotlin
 
 IntelliJ LSP is experimental and uses a separate JetBrains server EULA and license.
-EULA acceptance is enabled. Current EAP server builds expire 30 days after release,
-even with an Ultimate subscription; an expired build must be replaced.
+EULA acceptance is enabled. The server needs an IntelliJ IDEA Ultimate license.
 
-The plugin revision and server bundle are pinned. The installed server is:
+The plugin downloads, SHA-256 verifies and caches the server bundle its release pins,
+under `~/.local/share/nvim/intellij-lsp/server/<version>/`. `lazy-lock.json` pins
+the plugin revision; `:Lazy update` moves to newer server bundles and `:Lazy restore`
+rolls back. Point `INTELLIJ_LSP_SERVER` at a `bin/intellij-server` launcher to use
+another bundle. The server includes its own Java runtime.
 
-```
-~/.local/share/nvim/intellij-lsp/server/263.6379.0/bin/intellij-server
-```
-
-The bundle was downloaded from JetBrains and SHA-256 verified. On a new machine,
-install that bundle separately, or point `INTELLIJ_LSP_SERVER` at another compatible
-`bin/intellij-server` launcher. The local path bypasses the upstream downloader's
-Neovim 0.11 compatibility issue. The server includes its own Java runtime.
+On the first start, the plugin asks once for region and usage statistics. Activate
+the license once with `:IntellijLspLicense` (Sign in with JetBrains Account). It is
+stored per macOS user in `~/Library/Application Support/JetBrains/IntelliJServer`,
+shared by every project and server version.
 
 Project SDK configuration takes precedence; the fallback SDK comes from
 `JAVA_HOME`, then macOS's `/usr/libexec/java_home -v 21`.
