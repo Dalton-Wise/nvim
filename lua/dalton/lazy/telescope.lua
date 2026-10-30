@@ -2,6 +2,40 @@ local function picker(name, options)
     return function() require("telescope.builtin")[name](options or {}) end
 end
 
+local function selection_window(picker)
+    local sidebar = picker.original_win_id
+    local buffer = vim.api.nvim_win_get_buf(sidebar)
+    if vim.bo[buffer].filetype ~= "neo-tree" then
+        return 0 -- Keep normal Telescope behavior outside the sidebar.
+    end
+
+    local function is_editor(win)
+        return vim.api.nvim_win_is_valid(win)
+            and vim.api.nvim_win_get_config(win).relative == ""
+            and vim.bo[vim.api.nvim_win_get_buf(win)].buftype == ""
+            and not vim.wo[win].winfixbuf
+    end
+
+    -- Prefer the editor most recently focused before the sidebar.
+    local previous = require("neo-tree").get_prior_window({}, true)
+    if previous > 0 and is_editor(previous) then
+        return previous
+    end
+
+    -- Otherwise reuse any available editor in this tab.
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if is_editor(win) then
+            return win
+        end
+    end
+
+    -- Only the sidebar remains: create an editor and restore sidebar width.
+    vim.cmd("rightbelow vnew")
+    local editor = vim.api.nvim_get_current_win()
+    vim.api.nvim_win_set_width(sidebar, 40)
+    return editor
+end
+
 return {
     "nvim-telescope/telescope.nvim",
     -- This known-working revision supports Neovim 0.11.6 and filename_first.
@@ -20,6 +54,7 @@ return {
     opts = function()
         return {
             defaults = {
+                get_selection_window = selection_window,
                 path_display = { "filename_first" },
                 file_ignore_patterns = { "^build/", "/build/", "^bin/", "/bin/" },
             },
