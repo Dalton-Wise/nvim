@@ -18,6 +18,7 @@ vim.keymap.set("n", "<C-c>", "<cmd>close<CR>", { desc = "Close window" })
 for key, direction in pairs({ h = "h", j = "j", k = "k", l = "l" }) do
     vim.keymap.set("n", "<C-" .. key .. ">", "<C-w>" .. direction, { desc = "Focus window " .. direction })
 end
+vim.keymap.set("n", "<leader>z", function() require("dalton.zoom").toggle() end, { desc = "Toggle window zoom" })
 
 vim.keymap.set("v", "<", "<gv", { desc = "Indent left and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
