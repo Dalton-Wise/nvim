@@ -24,6 +24,20 @@ These are **all configured shortcuts**, plus the main plugin controls. **Leader 
 | `Space e` | Open built-in directory browser |
 | `\` | Open/focus Neo-tree; close from inside it |
 
+### Inside Neo-tree
+
+Select the parent folder before creating a file or folder. Press `Enter` to confirm names.
+
+| Keys | Action |
+| --- | --- |
+| `a` | Create a file; end the name with `/` to create a folder |
+| `A` | Create a folder |
+| `r` | Rename selected file/folder |
+| `d` | Delete selected file/folder |
+| `y`, then `p` | Copy selection, then paste in the destination folder |
+| `x`, then `p` | Cut selection, then paste in the destination folder |
+| `?` | Show sidebar shortcuts |
+
 ### Inside Telescope
 
 | Keys | Action |
