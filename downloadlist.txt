@@ -1,4 +1,3 @@
-iterm2
 oh-my-zsh
 nvim
 atuin
@@ -7,3 +6,20 @@ croc
 sdkman
 containerd/docker/colima
 minikube/kubectl
+ghostty
+tmux
+lazygit
+tuicr
+ripgrep
+fzf
+gh
+herdr
+claude-code
+opencode
+codex
+vscode
+raycast
+maccy
+rectangle
+go
+httpie
