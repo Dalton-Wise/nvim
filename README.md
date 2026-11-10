@@ -39,6 +39,7 @@ Leader is **Space**. Pause after pressing it to see Which-key's shortcuts.
 | `<leader>th` | Toggle inlay hints, when supported |
 | `<leader>f` | Format the buffer or visual selection |
 | `<leader>gg` | LazyGit |
+| `<leader>gr` | Review uncommitted changes in tuicr |
 | `gb` / `gB` | Blame line / open line or selection on GitHub |
 | `]c` / `[c` | Next / previous Git hunk |
 | `<leader>hp` / `<leader>hs` / `<leader>hr` | Preview / stage / reset Git hunk |

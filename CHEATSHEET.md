@@ -128,6 +128,7 @@ Examples: `saiw"` surrounds a word with quotes; `sd"` removes surrounding quotes
 | Keys | Action |
 | --- | --- |
 | `Space gg` | Open LazyGit |
+| `Space gr` | Review uncommitted changes in tuicr |
 | `gb` | Show blame for current line |
 | `gB` | Open current line—or Visual selection—on GitHub |
 | `]c` / `[c` | Next / previous changed hunk |
